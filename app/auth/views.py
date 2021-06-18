@@ -34,7 +34,7 @@ def register():
                     password=form.password.data)
         db.session.add(user)
         db.session.commit()
-        mail_message("Welcome to Pitchfest",
+        mail_message("Welcome to Pinblog",
                      "email/welcome_user",
                      user.email,
                      user=user)
