@@ -26,13 +26,13 @@ def index():
                            blogs=blogs,
                            quote=quote)
 
-
+#create new blog post"
 @main.route("/blog/<int:id>", methods=["BLOG", "GET"])
 def blog(id):
     blog = Blog.query.filter_by(id=id).first()
-    comments = Comment.query.filter_by(blog_id=id).all()
+    comment = Comment.query.filter_by(blog_id=id).all()
     comment_form = CommentForm()
-    comment_count = len(comments)
+    comment_count = len(comment)
 
     if comment_form.validate_on_submit():
         comment = comment_form.comment.data
@@ -50,6 +50,15 @@ def blog(id):
 
     return render_template("blog.html",
                            blog=blog,
-                           comments=comments,
+                           comments=comment,
                            comment_form=comment_form,
                            comment_count=comment_count)
+
+#function to delete blog
+@main.route("/blog/<int:id>/<int:comment_id>/delete")
+def delete_comment(id, comment_id):
+    blog = Blog.query.filter_by(id = id).first()
+    comment = Comment.query.filter_by(id = comment_id).first()
+    db.session.delete(comment)
+    db.session.commit()
+    return redirect(url_for("main.blog", id = blog.id))
