@@ -3,7 +3,7 @@ from flask_bootstrap import Bootstrap
 from config import config_options
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
-from flask_uploads import UploadSet, configure_uploads, IMAGES
+# from flask_uploads import UploadSet, configure_uploads, IMAGES
 from flask_simplemde import SimpleMDE
 from flask_mail import Mail
 
@@ -18,7 +18,7 @@ mail = Mail()
 simple = SimpleMDE()
 
 
-photos = UploadSet('photos', IMAGES)
+# photos = UploadSet('photos', IMAGES)
 
 
 def create_app(config_name):
@@ -26,7 +26,7 @@ def create_app(config_name):
     mail.init_app(app)
     print(mail)
     simple.init_app(app)
-    
+
     app.config.from_object(config_options[config_name])
 
     bootstrap.init_app(app)
@@ -36,12 +36,12 @@ def create_app(config_name):
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
-    from .request import configure_request
-    configure_request(app)
+    # from .request import configure_request
+    # configure_request(app)
 
     from .auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/authenticate')
 
-    configure_uploads(app, photos)
+    # configure_uploads(app, photos)
 
     return app
