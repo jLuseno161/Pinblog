@@ -1,6 +1,6 @@
 from flask import (render_template, request, redirect,
                    url_for)
-from app.main.forms import CommentForm, UpdateBlogForm
+from app.main.forms import BlogForm, CommentForm, UpdateBlogForm
 from app.email import mail_message
 from flask import render_template, request
 from . import main
@@ -26,11 +26,9 @@ def index():
                            blogs=blogs,
                            quote=quote)
 
-# create new blog post"
 
-
-@main.route("/blog/<int:id>", methods=["BLOG", "GET"])
-def new_blog(id):
+@main.route("/blog/<int:id>", methods=["POST", "GET"])
+def write_comment(id):
     blog = Blog.query.filter_by(id=id).first()
     comment = Comment.query.filter_by(blog_id=id).all()
     comment_form = CommentForm()
@@ -56,10 +54,48 @@ def new_blog(id):
                            comment_form=comment_form,
                            comment_count=comment_count)
 
+# function to delete blog
+
+@main.route("/blog/<int:id>/<int:comment_id>/delete")
+def delete_comment(id, comment_id):
+    blog = Blog.query.filter_by(id=id).first()
+    comment = Comment.query.filter_by(id=comment_id).first()
+    db.session.delete(comment)
+    db.session.commit()
+    return redirect(url_for("main.blogpost", id=blog.id))
+
 # function to update blog
 
 
-@main.route("/post/<int:id>/update", methods=["POST", "GET"])
+@main.route("/blog/new", methods=["POST", "GET"])
+@login_required
+def new_blog():
+    blog_form = BlogForm()
+    if blog_form.validate_on_submit():
+        blog_title = blog_form.blog_title.data
+        blog_form.blog_title.data = ""
+        blog_content = blog_form.blog_content.data
+        blog_form.blog_content.data = ""
+        new_blog = Blog(blog_title=blog_title,
+                        blog_content=blog_content,
+                        bloged_at=datetime.now(),
+                        blog_by=current_user.username,
+                        user_id=current_user.id)
+        new_blog.save_blog()
+        subscriber = Subscriber.query.all()
+        for subs in subscriber:
+            mail_message(blog_title,
+                         "email/notification", subs.email, new_blog=new_blog)
+            pass
+        return redirect(url_for("main.blog", id=new_blog.id))
+
+    return render_template("new_blog.html",
+                           blog_form=blog_form)
+
+# function to update blog
+
+
+@main.route("/blog/<int:id>/update", methods=["POST", "GET"])
 @login_required
 def update_blog(id):
     blog = Blog.query.filter_by(id=id).first()
@@ -76,17 +112,7 @@ def update_blog(id):
         return redirect(url_for("main.update", id=blog.id))
 
     return render_template("update_blog.html",
-                           post=blog,
+                           blog=blog,
                            edit_blog=form)
 
 
-# function to delete blog
-
-
-@main.route("/blog/<int:id>/<int:comment_id>/delete")
-def delete_comment(id, comment_id):
-    blog = Blog.query.filter_by(id=id).first()
-    comment = Comment.query.filter_by(id=comment_id).first()
-    db.session.delete(comment)
-    db.session.commit()
-    return redirect(url_for("main.blogpost", id=blog.id))

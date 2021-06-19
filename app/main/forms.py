@@ -27,7 +27,7 @@ class UpdateBlogForm(FlaskForm):
 
 # class CommentForm(FlaskForm):
 #     comment = TextAreaField("Post Comment", validators=[Required()])
-#     alias = StringField("Comment Alias")
+    alias = StringField("Comment Alias")
 #     submit = SubmitField("Comment")
 
 

@@ -1,3 +1,4 @@
+from app.main.forms import BlogForm
 from flask import flash, redirect, render_template, request, url_for
 from flask_login import login_required, login_user, logout_user
 from .. import db
@@ -52,3 +53,4 @@ def logout():
     logout_user()
     flash('You have been successfully logged out')
     return redirect(url_for("main.index"))
+
