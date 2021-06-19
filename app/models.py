@@ -42,3 +42,43 @@ class User(UserMixin, db.Model):
         return f'User {self.username}'
 
 
+class Blog(db.Model):
+    """
+    List of blogs in each category 
+    """
+
+    __tablename__ = 'blogs'
+
+    id = db.Column(db.Integer, primary_key=True)
+    blog_id = db.Column(db.Integer)
+    blog_title = db.Column(db.String)
+    blog_content = db.Column(db.String)
+    posted = db.Column(db.DateTime, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    delete = db.Column(db.Integer)
+    update = db.Column(db.Integer)
+    comment = db.relationship('Comment', backref='blog', lazy="dynamic")
+
+    def save_blog(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def save_delete(self: update):
+        db.session.add(self)
+        db.session.commit()
+
+    def save_delete(self: update):
+        db.session.add(self)
+        db.session.commit()
+
+
+    @classmethod
+    def getblogId(cls, id):
+        blog = Blog.query.filter_by(id=id).first()
+        return blog
+
+    @classmethod
+    def clear_blog(cls):
+        Blog.all_blog.clear()
+
+
