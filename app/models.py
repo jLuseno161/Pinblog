@@ -67,7 +67,7 @@ class Blog(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def save_delete(self: update):
+    def save_update(self: update):
         db.session.add(self)
         db.session.commit()
 
@@ -78,7 +78,27 @@ class Blog(db.Model):
         return blog
 
     @classmethod
-    def clear_blog(cls):
+    def clear_blog(cls,id):
         Blog.all_blog.clear()
 
+class Comment(db.Model):
+    """
+    User comment model for each blog 
+    """
+    __tablename__ = 'comments'
 
+    id = db.Column(db.Integer, primary_key=True)
+    comment = db.Column(db.String(255))
+    time_posted = db.Column(db.DateTime, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    blog_id = db.Column(db.Integer, db.ForeignKey("blog.id"))
+
+    def save_comment(self):
+        db.session.add(self)
+        db.session.commit()
+
+    @classmethod
+    def get_comments(self, id):
+        comment = Comment.query.order_by(
+            Comment.time_posted.desc()).filter_by(blog_id=id).all()
+        return comment
