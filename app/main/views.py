@@ -28,6 +28,7 @@ def index():
 
 
 @main.route("/blog/<int:id>", methods=["POST", "GET"])
+@login_required
 def write_comment(id):
     blog = Blog.getBlogId(id)
     comment = Comment.get_comments(id)
@@ -51,6 +52,7 @@ def write_comment(id):
 
 
 @main.route("/blog/<int:id>/delete")
+@login_required
 def delete_comment(id):
     comment = Comment.getCommentId(id)
     db.session.delete(comment)
@@ -58,12 +60,16 @@ def delete_comment(id):
     return redirect(url_for(".write_comment", id=comment.id))
 
 # function to update blog
+
+
 @main.route("/blog/<int:id>/delete")
+@login_required
 def delete_blog(id):
     blog = Blog.getBlogId(id)
     db.session.delete(blog)
     db.session.commit()
     return redirect(url_for(".index", id=blog.id))
+
 
 @main.route("/blog/new", methods=["POST", "GET"])
 @login_required
@@ -86,22 +92,19 @@ def new_blog():
 # function to update blog
 
 
-@main.route("/blog/<int:id>/update", methods=["POST", "GET"])
+@main.route('/update/<int:id>', methods=['GET', 'POST'])
 @login_required
 def update_blog(id):
-    blog = Blog.query.filter_by(id=id).first()
-    form = UpdateBlogForm()
-
+    blog = Blog.query.get_or_404(id)
+    form = BlogForm()
     if form.validate_on_submit():
         blog.blog_title = form.blog_title.data
-        form.blog_title.data = ""
         blog.blog_content = form.blog_content.data
-        form.blog_content.data = ""
-
         db.session.add(blog)
         db.session.commit()
-        return redirect(url_for("main.update", id=blog.id))
 
-    return render_template("update_blog.html",
-                           blog=blog,
-                           edit_blog=form)
+        return redirect(url_for('.index'))
+    elif request.method == 'GET':
+        form.blog_title.data = blog.blog_title
+        form.blog_content.data = blog.blog_content
+    return render_template('update.html',blog=blog, form=form)
