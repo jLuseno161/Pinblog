@@ -16,7 +16,7 @@ class CommentForm(FlaskForm):
     """
         form for creating a blog comment
     """
-    opinion = TextAreaField('COMMENT ON BLOG')
+    comment = TextAreaField('COMMENT ON BLOG')
     submit = SubmitField('SUBMIT')
 
 

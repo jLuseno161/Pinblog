@@ -29,44 +29,41 @@ def index():
 
 @main.route("/blog/<int:id>", methods=["POST", "GET"])
 def write_comment(id):
-    blog = Blog.query.filter_by(id=id).first()
-    comment = Comment.query.filter_by(blog_id=id).all()
+    blog = Blog.getBlogId(id)
+    comment = Comment.get_comments(id)
     comment_form = CommentForm()
-    comment_count = len(comment)
 
     if comment_form.validate_on_submit():
         comment = comment_form.comment.data
         comment_form.comment.data = ""
-        comment_alias = comment_form.alias.data
-        comment_form.alias.data = ""
-        if current_user.is_authenticated:
-            comment_alias = current_user.username
         new_comment = Comment(comment=comment,
-                              comment_at=datetime.now(),
-                              comment_by=comment_alias,
-                              blog_id=id)
+                              user_id=current_user.id,
+                              blog_id=blog.id)
         new_comment.save_comment()
-        return redirect(url_for("main.blogpost", id=blog.id))
+        return redirect(url_for(".write_comment", id=blog.id))
 
-    return render_template("blogpost.html",
-                           blog=blog,
-                           comments=comment,
+    return render_template("comment.html",
                            comment_form=comment_form,
-                           comment_count=comment_count)
+                           comment=comment,
+                           blog=blog)
 
 # function to delete blog
 
 
-@main.route("/blog/<int:id>/<int:comment_id>/delete")
-def delete_comment(id, comment_id):
-    blog = Blog.query.filter_by(id=id).first()
-    comment = Comment.query.filter_by(id=comment_id).first()
+@main.route("/blog/<int:id>/delete")
+def delete_comment(id):
+    comment = Comment.getCommentId(id)
     db.session.delete(comment)
     db.session.commit()
-    return redirect(url_for("main.blogpost", id=blog.id))
+    return redirect(url_for(".write_comment", id=comment.id))
 
 # function to update blog
-
+@main.route("/blog/<int:id>/delete")
+def delete_blog(id):
+    blog = Blog.getBlogId(id)
+    db.session.delete(blog)
+    db.session.commit()
+    return redirect(url_for(".index", id=blog.id))
 
 @main.route("/blog/new", methods=["POST", "GET"])
 @login_required

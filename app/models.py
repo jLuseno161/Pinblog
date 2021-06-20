@@ -77,6 +77,11 @@ class Blog(db.Model):
         return blogs
 
     @classmethod
+    def getBlogId(cls, id):
+        blog = Blog.query.filter_by(id=id).first()
+        return blog
+
+    @classmethod
     def get_all_blogs(cls):
         return Blog.query.order_by(Blog.posted_at).all()
 
@@ -101,9 +106,14 @@ class Comment(db.Model):
         db.session.commit()
 
     @classmethod
+    def getCommentId(cls, id):
+        comment = Comment.query.filter_by(id=id).first()
+        return comment
+
+    @classmethod
     def get_comments(self, id):
         comment = Comment.query.order_by(
-            Comment.time_posted.desc()).filter_by(blog_id=id).all()
+            Comment.comment_date.desc()).filter_by(blog_id=id).all()
         return comment
 
 class Subscriber(db.Model):
