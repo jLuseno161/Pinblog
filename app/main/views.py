@@ -56,6 +56,7 @@ def write_comment(id):
 
 # function to delete blog
 
+
 @main.route("/blog/<int:id>/<int:comment_id>/delete")
 def delete_comment(id, comment_id):
     blog = Blog.query.filter_by(id=id).first()
@@ -70,27 +71,20 @@ def delete_comment(id, comment_id):
 @main.route("/blog/new", methods=["POST", "GET"])
 @login_required
 def new_blog():
-    blog_form = BlogForm()
-    if blog_form.validate_on_submit():
-        blog_title = blog_form.blog_title.data
-        blog_form.blog_title.data = ""
-        blog_content = blog_form.blog_content.data
-        blog_form.blog_content.data = ""
+    newblogform = BlogForm()
+    if newblogform.validate_on_submit():
+        blog_title = newblogform.blog_title.data
+        newblogform.blog_title.data = ""
+        blog_content = newblogform.blog_content.data
+        newblogform.blog_content.data = ""
         new_blog = Blog(blog_title=blog_title,
                         blog_content=blog_content,
-                        bloged_at=datetime.now(),
-                        blog_by=current_user.username,
+                        posted_at=datetime.now(),
                         user_id=current_user.id)
         new_blog.save_blog()
-        subscriber = Subscriber.query.all()
-        for subs in subscriber:
-            mail_message(blog_title,
-                         "email/notification", subs.email, new_blog=new_blog)
-            pass
-        return redirect(url_for("main.blog", id=new_blog.id))
 
     return render_template("new_blog.html",
-                           blog_form=blog_form)
+                           newblogform=newblogform)
 
 # function to update blog
 
@@ -114,5 +108,3 @@ def update_blog(id):
     return render_template("update_blog.html",
                            blog=blog,
                            edit_blog=form)
-
-
