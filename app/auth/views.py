@@ -7,7 +7,9 @@ from . import auth
 from .forms import LoginForm, RegistrationForm
 from ..email import mail_message
 
-#login form
+# login form
+
+
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     login_form = LoginForm()
@@ -25,7 +27,7 @@ def login():
                            title=title)
 
 
-#register function
+# register function
 @auth.route('/register', methods=["GET", "POST"])
 def register():
     form = RegistrationForm()
@@ -40,17 +42,15 @@ def register():
                      user.email,
                      user=user)
         return redirect(url_for('auth.login'))
-    title = "New Account"
-
-    print(mail_message)
 
     return render_template('auth/register.html', registration_form=form)
 
-#logout form
+# logout form
+
+
 @auth.route('/logout')
 @login_required
 def logout():
     logout_user()
     flash('You have been successfully logged out')
     return redirect(url_for("main.index"))
-
