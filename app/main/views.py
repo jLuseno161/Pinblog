@@ -93,16 +93,16 @@ def new_blog():
                         user_id=current_user.id)
         new_blog.save_blog()
 
-        subs = Subscriber.getAllMails(id)
-
-        # sub_message("Thank you for subscribing to the CM blog",
-        #             "email/welcome_user", subs.email)
+        subscriber = Subscriber.query.all()
+        for subs in subscriber:
+            sub_message(blog_title,
+                        "email/subscription", subs.email, new_blog=new_blog)
+        return redirect(url_for(".index", id=new_blog.id))
     return render_template("new_blog.html",
                            newblogform=newblogform)
 
+
 # function to update blog
-
-
 @main.route('/update/<int:id>', methods=['GET', 'POST'])
 @login_required
 def update_blog(id):
