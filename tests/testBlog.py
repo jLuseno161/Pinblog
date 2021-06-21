@@ -5,7 +5,7 @@ from app.models import Blog, User
 class BlogTest(unittest.TestCase):
     def setUp(self):
         self.user_id = User(username='jojo', password='jojes', email='joy@gmail.com')
-        self.new_blog = Blog(blog_title='My Blog',posted_at='29/12/2000', blog_content='My blog', user_id=self.user_id.id, delete='1',update='1')
+        self.new_blog = Blog(blog_title='My Blog',posted_at='29/12/2000', blog_content='My blog', user_id=self.user_id.id)
 
 
     def test_check_instance_variables(self):

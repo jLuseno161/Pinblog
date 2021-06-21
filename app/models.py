@@ -54,8 +54,6 @@ class Blog(db.Model):
     blog_content = db.Column(db.String)
     posted_at = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    delete = db.Column(db.Integer)
-    update = db.Column(db.Integer)
     comment = db.relationship('Comment', backref='blog', lazy="dynamic")
 
     def save_blog(self):

@@ -1,0 +1,23 @@
+body {
+    background-image: url(./sun.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+}
+
+#overlay {
+    padding-bottom: 1%;
+    position: relative;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(83, 77, 77, 0.5);
+}
+
+.panel-heading {
+    background-color: gainsboro;
+}
+
+.navbar {
+    background-color: #050c2e;
+}

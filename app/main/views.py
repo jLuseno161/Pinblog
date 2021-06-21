@@ -93,6 +93,7 @@ def new_blog():
                         user_id=current_user.id)
         new_blog.save_blog()
 
+        # call email addresses from the subscriber table in db
         subscriber = Subscriber.query.all()
         for subs in subscriber:
             sub_message(blog_title,
