@@ -1,6 +1,7 @@
 import unittest
 from app.models import Quote
 
+
 class TestQuote(unittest.TestCase):
     def setUp(self):
         self.random_quote = Quote("Jojoy", "To blog is to vlog")
@@ -10,4 +11,4 @@ class TestQuote(unittest.TestCase):
 
     def test_init(self):
         self.assertEqual(self.random_quote.author, "Jojoy")
-        self.assertEqual(self.random_quote.quote,"To blog is to vlog")
+        self.assertEqual(self.random_quote.quote, "To blog is to vlog")

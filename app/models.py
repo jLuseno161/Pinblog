@@ -65,12 +65,7 @@ class Blog(db.Model):
     def delete_blog(self):
         db.session.delete(self)
         db.session.commit()
-
-    # def update_blog(self):
-    #     db.session.add(self)
-    #     db.session.commit()
-
-
+        
     @classmethod
     def get_blogs(cls, id):
         blogs = Blog.query.filter_by(user_id = id).order_by(Blog.posted_at.desc()).all()
@@ -128,6 +123,9 @@ class Subscriber(db.Model):
     def save_subscriber(self):
         db.session.add(self)
         db.session.commit()
+
+    def getAllMails(cls):
+        return Subscriber.query.order_by(Subscriber.id).all()
 
     def __repr__(self):
         return f'Subscriber {self.email}'

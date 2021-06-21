@@ -1,7 +1,9 @@
 from flask import (render_template, request, redirect,
                    url_for)
-from app.main.forms import BlogForm, CommentForm, UpdateBlogForm
-from app.email import mail_message
+from flask.helpers import flash
+from app import email
+from app.main.forms import BlogForm, CommentForm
+from app.email import mail_message, sub_message
 from flask import render_template, request
 from . import main
 from .. import db
@@ -16,12 +18,6 @@ def index():
     blogs = Blog.get_all_blogs()
     quote = get_quote()
 
-    if request.method == "POST":
-        subs = Subscriber(email=request.form.get("subscriber"))
-        db.session.add(subs)
-        db.session.commit()
-        mail_message("Thank you for subscribing with us",
-                     "email/welcome", subs.email)
     return render_template("index.html",
                            blogs=blogs,
                            quote=quote)
@@ -62,6 +58,17 @@ def delete_comment(id):
 # function to update blog
 
 
+@main.route('/subscribe')
+@login_required
+def subscribe():
+
+    subs = Subscriber(email=current_user.email)
+    db.session.add(subs)
+    db.session.commit()
+    subs.save_subscriber()
+    return redirect(url_for("main.index"))
+
+
 @main.route("/blog/<int:id>/delete")
 @login_required
 def delete_blog(id):
@@ -86,6 +93,10 @@ def new_blog():
                         user_id=current_user.id)
         new_blog.save_blog()
 
+        subs = Subscriber.getAllMails(id)
+
+        # sub_message("Thank you for subscribing to the CM blog",
+        #             "email/welcome_user", subs.email)
     return render_template("new_blog.html",
                            newblogform=newblogform)
 
@@ -107,4 +118,4 @@ def update_blog(id):
     elif request.method == 'GET':
         form.blog_title.data = blog.blog_title
         form.blog_content.data = blog.blog_content
-    return render_template('update.html',blog=blog, form=form)
+    return render_template('update.html', blog=blog, form=form)

@@ -8,7 +8,7 @@ app = Flask(__name__)
 mail = Mail(app)
 
 sender_email = 'projectsmoringa@gmail.com'
-subject_pref = 'Pitchfest:'
+subject_pref = 'PinBlog'
 
 app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
 app.config['MAIL_PORT'] = 587
@@ -20,6 +20,14 @@ mail = Mail(app)
 
 
 def mail_message(subject, template, to, **kwargs):
+    email = Message(subject_pref + " " + subject,
+                    sender=sender_email,
+                    recipients=[to])
+    email.body = render_template(template + ".txt", **kwargs)
+    mail.send(email)
+    # print(email)
+
+def sub_message(subject, template, to, **kwargs):
     email = Message(subject_pref + " " + subject,
                     sender=sender_email,
                     recipients=[to])

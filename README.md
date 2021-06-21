@@ -1,4 +1,4 @@
-# D-Blog
+# PINBLOG
 
 ## Author
 
@@ -6,8 +6,7 @@
 
 ## Description
 
-An personal blog site that allows writers to post blogs, edit and delete blogs. It also allows users who have signed up to comment on the blogs that has been posted by a writer. It also allows a person to subscribed to recieve email everytime a new blog is posted by a writer.
-Also, a user can be inspired by random quotes each time they refresh the page.
+A personal blog site that allows writers to post blogs, edit and delete blogs. It also allows users who have signed up to comment on the blogs that have been posted by a writer. It also allows a person to subscribe to receive an email every time a new blog is posted by a writer. Also, a user can be inspired by random quotes each time they refresh the page.
 
 ## Live Link
 
